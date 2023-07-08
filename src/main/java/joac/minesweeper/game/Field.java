@@ -9,14 +9,11 @@ public class Field {
 
     private final int height;
 
-    private final int size;
-
     private final List<Cell> cells = new ArrayList<>();
 
     public Field(int width, int height) {
         this.width = width;
         this.height = height;
-        this.size = width * height;
 
         fillCells();
     }
@@ -25,11 +22,11 @@ public class Field {
      * Установить заданное количество мин, но не больше чем количество клеток поля.
      */
     public void plantMines(int count) {
-        if (count > size)
-            count = size;
+        if (count > cells.size())
+            count = cells.size();
         int planted = 0;
         while (planted < count) {
-            int position = (int) (size * Math.random());
+            int position = (int) (cells.size() * Math.random());
             if (plant(position))
                 planted++;
         }
@@ -53,6 +50,9 @@ public class Field {
         }
     }
 
+    /**
+     * Получить клетку по координатам. Вернет `null`, если координаты указывают на область вне поля.
+     */
     public Cell get(int x, int y) {
         if (outField(x, y))
             return null;
@@ -75,20 +75,31 @@ public class Field {
         return get(mine.getX() + x - 1, mine.getY() + y - 1);
     }
 
+    /**
+     * Заполнить массив клеток объектами Cell.
+     */
     public void fillCells() {
-        for (int i = 0; i < width * height; i++) {
+        for (int i = 0; i < cells.size(); i++) {
             cells.add(new Cell(i % width, i / width, Cell.FREE));
         }
     }
 
+    /**
+     * Рассчитать значение всех клеток поля.
+     */
     public void calcCells() {
-        for (int i = 0; i < width * height; i++) {
+        for (int i = 0; i < cells.size(); i++) {
             Cell cell = get(i);
             if (cell.isMine())
                 calcCell(cell);
         }
     }
 
+    /**
+     * Пересчитать значения соседних клеток.
+     * Цикл обойдет все клетки вокруг указанной. Если соседняя клетка
+     * не является миной, то уровень ее опасности увеличится на 1.
+     */
     public void calcCell(Cell mine) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
@@ -101,6 +112,9 @@ public class Field {
         }
     }
 
+    /**
+     * Вывести данные поля в консоль.
+     */
     public void printCells() {
         for (int y = 0; y < height; y++) {
             StringBuilder row = new StringBuilder();
