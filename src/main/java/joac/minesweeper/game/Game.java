@@ -6,6 +6,10 @@ public class Game {
 
     public Game(GameProperties properties) {
         field = new Field(properties.getFieldWith(), properties.getFieldHeight());
+
+        field.fillCells();
+        field.plantMines(properties.getMineCount());
+        field.calcCells();
     }
 
     public Field getField() {

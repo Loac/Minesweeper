@@ -9,24 +9,25 @@ public class Field {
 
     private final int height;
 
+    private final int size;
+
     private final List<Cell> cells = new ArrayList<>();
 
     public Field(int width, int height) {
         this.width = width;
         this.height = height;
-
-        fillCells();
+        this.size = width * height;
     }
 
     /**
      * Установить заданное количество мин, но не больше чем количество клеток поля.
      */
     public void plantMines(int count) {
-        if (count > cells.size())
-            count = cells.size();
+        if (count > size)
+            count = size;
         int planted = 0;
         while (planted < count) {
-            int position = (int) (cells.size() * Math.random());
+            int position = (int) (size * Math.random());
             if (plant(position))
                 planted++;
         }
@@ -79,7 +80,7 @@ public class Field {
      * Заполнить массив клеток объектами Cell.
      */
     public void fillCells() {
-        for (int i = 0; i < cells.size(); i++) {
+        for (int i = 0; i < size; i++) {
             cells.add(new Cell(i % width, i / width, Cell.FREE));
         }
     }
@@ -88,7 +89,7 @@ public class Field {
      * Рассчитать значение всех клеток поля.
      */
     public void calcCells() {
-        for (int i = 0; i < cells.size(); i++) {
+        for (int i = 0; i < size; i++) {
             Cell cell = get(i);
             if (cell.isMine())
                 calcCell(cell);
@@ -100,7 +101,7 @@ public class Field {
      * Цикл обойдет все клетки вокруг указанной. Если соседняя клетка
      * не является миной, то уровень ее опасности увеличится на 1.
      */
-    public void calcCell(Cell mine) {
+    private void calcCell(Cell mine) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 Cell cell = nearby(mine, x, y);
@@ -149,6 +150,6 @@ public class Field {
     }
 
     public boolean outField(int position) {
-        return position < 0 || position > cells.size() -1;
+        return position < 0 || position > size -1;
     }
 }

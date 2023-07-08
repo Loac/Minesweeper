@@ -14,7 +14,9 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Field;
+import joac.minesweeper.game.Game;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -26,12 +28,14 @@ public class HelloApplication extends Application {
         // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Group group = new Group();
 
-        Field field = new Field(7, 5);
+        // Field field = new Field(7, 5);
+        // field.plantMines(4);
+        // field.calcCells();
+        // field.printCells();
+        Engine engine = new Engine();
+        Game game = engine.newGame();
+        game.getField().printCells();
 
-        field.plantMines(4);
-
-        field.calcCells();
-        field.printCells();
 
 
         // Arrays.stream(arr).forEach(item ->
