@@ -42,6 +42,7 @@ public class Game {
     }
 
     public void gameOver() {
+        minefield.openCells();
         state = State.LOSE;
     }
 

@@ -133,6 +133,10 @@ public class Minefield {
         openCell(cell);
     }
 
+    public void openCells() {
+        cells.forEach(Cell::open);
+    }
+
     /**
      * Вывести данные поля в консоль.
      */
