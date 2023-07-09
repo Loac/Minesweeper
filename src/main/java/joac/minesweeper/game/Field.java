@@ -81,7 +81,7 @@ public class Field {
      */
     public void fillCells() {
         for (int i = 0; i < size; i++) {
-            cells.add(new Cell(i % width, i / width, Cell.FREE));
+            cells.add(new Cell(i % width, i / width, Cell.CLEAR));
         }
     }
 

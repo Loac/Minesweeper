@@ -15,4 +15,14 @@ public class Game {
     public Field getField() {
         return field;
     }
+
+    public void markCell(Cell cell) {
+        cell.switchState();
+    }
+
+    public void openCell(Cell cell) {
+        if (cell.canOpened()) {
+            cell.open();
+        }
+    }
 }

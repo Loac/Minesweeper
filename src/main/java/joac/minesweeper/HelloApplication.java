@@ -14,13 +14,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import joac.minesweeper.game.Cell;
 import joac.minesweeper.game.Engine;
-import joac.minesweeper.game.Field;
 import joac.minesweeper.game.Game;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class HelloApplication extends Application {
+
+    private final Engine engine = new Engine();
+
+    private Game game;
 
     public static class CellValue extends Label {
 
@@ -48,22 +51,43 @@ public class HelloApplication extends Application {
         }
     }
 
-    private static class CellButton extends Button {
-        public CellButton() {
+    private class CellButton extends Button {
+
+        private final Cell cell;
+
+        public CellButton(Cell cell) {
+            this.cell = cell;
+
             setMaxWidth(40);
             setMaxHeight(40);
             setMinWidth(40);
             setMinHeight(40);
             setOnMouseClicked(e -> {
-                System.out.println(e.getButton());
                 if (e.getButton().equals(MouseButton.PRIMARY))
-                    setVisible(false);
+                    actionOpenCell();
                 if (e.getButton().equals(MouseButton.SECONDARY)) {
-                    setDisable(true);
-                    setText("X");
-                    setOpacity(1);
+                    actionSwitchCell();
                 }
             });
+        }
+
+        public void actionSwitchCell() {
+            game.markCell(cell);
+            update();
+        }
+
+        private void actionOpenCell() {
+            game.openCell(cell);
+            update();
+        }
+
+        public void update() {
+            switch (cell.getState()) {
+                case DEFAULT -> setText("");
+                case MARKED -> setText("⚑");
+                case UNKNOWN -> setText("?");
+                case OPENED -> setVisible(false);
+            }
         }
     }
 
@@ -82,60 +106,67 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Group group = new Group();
 
-        // Field field = new Field(7, 5);
-        // field.plantMines(4);
-        // field.calcCells();
-        // field.printCells();
-        Engine engine = new Engine();
-        Game game = engine.newGame();
+        game = engine.newGame();
         game.getField().printCells();
 
-
-
-        // Arrays.stream(arr).forEach(item ->
-        //         System.out.printf("%s: %s x %s%n", item, item % 4, item / 4)
-        // );
 
         VBox minefield = new VBox();
         minefield.setPadding(new Insets(20, 20, 20, 20));
         VBox rows = new VBox();
         rows.setBorder(new Border(new BorderStroke(Color.rgb(220,220,220), BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        rows.setSpacing(2);
         HBox row = new HBox();
+        row.setSpacing(2);
         for (Cell cell : game.getField().getCells()) {
             row.getChildren().add(new CellValue(cell.getDanger()));
 
             if (row.getChildren().size() >= game.getField().getWidth()) {
                 rows.getChildren().add(row);
                 row = new HBox();
+                row.setSpacing(2);
             }
         }
         minefield.getChildren().add(rows);
         minefield.autosize();
 
-        // for (int y = 0; y < game.getField().getHeight(); y++) {
-        //     HBox row = new HBox();
-        //     for (int x = 0; x < game.getField().getWidth(); x++) {
-        //         row.getChildren().add(new CellValue("0"));
-        //     }
-        //     minefield.getChildren().add(row);
-        // }
+
+        Group group = new Group();
+        group.getChildren().add(minefield);
+        group.getChildren().add(buttons(game));
 
 
-        // group.getChildren().add(hBox);
-        // vBox.getChildren().add(hBox);
-        // group.getChildren().add(label2);
-        // group.getChildren().add(button);
 
-
-        Scene scene = new Scene(minefield, minefield.getBoundsInParent().getWidth(), minefield.getBoundsInParent().getHeight());
+        Scene scene = new Scene(group, minefield.getBoundsInParent().getWidth(), minefield.getBoundsInParent().getHeight());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.setTitle("Minesweeper!");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+    }
+
+    private VBox buttons(Game game) {
+        VBox buttons = new VBox();
+        buttons.setPadding(new Insets(20, 20, 20, 20));
+        VBox rows = new VBox();
+        rows.setBorder(new Border(new BorderStroke(Color.rgb(220,220,220), BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        rows.setSpacing(2);
+        HBox row = new HBox();
+        row.setSpacing(2);
+        for (Cell cell : game.getField().getCells()) {
+            CellButton button = new CellButton(cell);
+            button.setFocusTraversable(false);
+            row.getChildren().add(button);
+
+            if (row.getChildren().size() >= game.getField().getWidth()) {
+                rows.getChildren().add(row);
+                row = new HBox();
+                row.setSpacing(2);
+            }
+        }
+        buttons.getChildren().add(rows);
+        return buttons;
     }
 
     public static void main(String[] args) {
