@@ -12,13 +12,16 @@ public class Cell {
 
     private int danger; // 0 пусто; 1-8 количество мин; 9 мина.
 
-    private State state;
+    private boolean isOpened;
+
+    private Marker marker;
 
     public Cell(int x, int y, int danger) {
         this.x = x;
         this.y = y;
         this.danger = danger;
-        this.state = State.DEFAULT;
+        this.isOpened = false;
+        this.marker = Marker.DEFAULT;
     }
 
     public int getDanger() {
@@ -46,6 +49,10 @@ public class Cell {
         return danger == CLEAR;
     }
 
+    public boolean isOpened() {
+        return isOpened;
+    }
+
     public int getX() {
         return x;
     }
@@ -54,37 +61,40 @@ public class Cell {
         return y;
     }
 
-    public State getState() {
-        return state;
+    public Marker getState() {
+        return marker;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setState(Marker marker) {
+        this.marker = marker;
     }
 
-    public void switchState() {
-        switch (state) {
-            case DEFAULT -> state = State.MARKED;
-            case MARKED -> state = State.UNKNOWN;
-            case UNKNOWN -> state = State.DEFAULT;
+    public void switchMarker() {
+        switch (marker) {
+            case DEFAULT -> marker = Marker.FLAG;
+            case FLAG -> marker = Marker.UNKNOWN;
+            case UNKNOWN -> marker = Marker.DEFAULT;
         }
     }
 
+    public void markFlag() {
+        marker = Marker.FLAG;
+    }
+
     public boolean canOpened() {
-        return state.equals(State.DEFAULT);
+        return !isOpened && marker.equals(Marker.DEFAULT);
     }
 
     public void open() {
-        state = State.OPENED;
+        isOpened = true;
     }
 
     /**
-     * Состояние клетки (кнопки), которым управляет игрок.
+     * Маркер клетки (кнопки), которым управляет игрок.
      */
-    public enum State {
+    public enum Marker {
         DEFAULT,
-        MARKED,
-        UNKNOWN,
-        OPENED
+        FLAG,
+        UNKNOWN
     }
 }

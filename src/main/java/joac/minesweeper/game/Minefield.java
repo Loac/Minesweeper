@@ -108,8 +108,8 @@ public class Minefield {
     /**
      * Установить или снять отметку с клетки.
      */
-    public void markCell(Cell cell) {
-        cell.switchState();
+    public void switchMarker(Cell cell) {
+        cell.switchMarker();
     }
 
     /**
@@ -135,6 +135,12 @@ public class Minefield {
 
     public void openCells() {
         cells.forEach(Cell::open);
+    }
+
+    public void markMines() {
+        cells.stream()
+                .filter(Cell::isMine)
+                .forEach(Cell::markFlag);
     }
 
     /**

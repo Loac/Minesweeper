@@ -1,6 +1,5 @@
 package joac.minesweeper.gui;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -55,10 +54,12 @@ public class Square extends Group {
         public void update() {
             switch (cell.getState()) {
                 case DEFAULT -> setText("");
-                case MARKED -> setText("⚑");
+                case FLAG -> setText("⚑");
                 case UNKNOWN -> setText("?");
-                case OPENED -> setVisible(false);
             }
+
+            if (cell.isOpened())
+                setVisible(false);
         }
 
         public Cell getCell() {
