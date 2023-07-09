@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Game;
-import joac.minesweeper.gui.Minefield;
+import joac.minesweeper.gui.Board;
 import joac.minesweeper.gui.Square;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
 
     private Game game;
 
-    private Minefield minefield;
+    private Board board;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -26,10 +26,10 @@ public class HelloApplication extends Application {
         game = engine.newGame();
         game.getField().printCells();
 
-        minefield = new Minefield(game.getField());
-        minefield.setHandler(this::actionMinefield);
+        board = new Board(game.getField());
+        board.setHandler(this::actionMinefield);
 
-        Scene scene = new Scene(minefield, minefield.width(), minefield.height());
+        Scene scene = new Scene(board, board.width(), board.height());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.setTitle("Minesweeper!");
@@ -44,11 +44,11 @@ public class HelloApplication extends Application {
         switch (event.getButton()) {
             case PRIMARY -> {
                 game.openCell(pin.getCell());
-                minefield.update();
+                board.update();
             }
             case SECONDARY -> {
                 game.markCell(pin.getCell());
-                minefield.update(pin);
+                board.update(pin);
             }
         }
     }

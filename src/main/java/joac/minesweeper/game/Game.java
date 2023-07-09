@@ -2,24 +2,24 @@ package joac.minesweeper.game;
 
 public class Game {
 
-    private final Field field;
+    private final Minefield minefield;
 
     public State state = State.NEW;
 
     public Game(GameProperties properties) {
-        field = new Field(properties.getFieldWith(), properties.getFieldHeight());
+        minefield = new Minefield(properties.getFieldWith(), properties.getFieldHeight());
 
-        field.fillCells();
-        field.plantMines(properties.getMineCount());
-        field.calcCells();
+        minefield.fillCells();
+        minefield.plantMines(properties.getMineCount());
+        minefield.calcCells();
     }
 
-    public Field getField() {
-        return field;
+    public Minefield getField() {
+        return minefield;
     }
 
     public void markCell(Cell cell) {
-        field.markCell(cell);
+        minefield.markCell(cell);
         inProgress();
     }
 
@@ -27,7 +27,7 @@ public class Game {
         if (!cell.canOpened())
             return;
 
-        field.openCell(cell);
+        minefield.openCell(cell);
 
         if (cell.isMine()) {
             gameOver();

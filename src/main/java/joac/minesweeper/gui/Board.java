@@ -6,19 +6,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import joac.minesweeper.game.Cell;
-import joac.minesweeper.game.Field;
+import joac.minesweeper.game.Minefield;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Minefield extends VBox {
+public class Board extends VBox {
 
-    private final Field field;
+    private final Minefield minefield;
 
     private final List<Square> squares = new ArrayList<>();
 
-    public Minefield(Field field) {
-        this.field = field;
+    public Board(Minefield minefield) {
+        this.minefield = minefield;
         setPadding(new Insets(20, 20, 20, 20));
 
         build();
@@ -27,12 +27,12 @@ public class Minefield extends VBox {
     private void build() {
         Rows rows = new Rows();
         Row row = new Row();
-        for (Cell cell : field.getCells()) {
+        for (Cell cell : minefield.getCells()) {
             Square square = new Square(cell);
             row.getChildren().add(square);
             squares.add(square);
 
-            if (row.getChildren().size() >= field.getWidth()) {
+            if (row.getChildren().size() >= minefield.getWidth()) {
                 rows.getChildren().add(row);
                 row = new Row();
             }

@@ -3,7 +3,7 @@ package joac.minesweeper.game;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Field {
+public class Minefield {
 
     private final int width;
 
@@ -13,7 +13,7 @@ public class Field {
 
     private final List<Cell> cells = new ArrayList<>();
 
-    public Field(int width, int height) {
+    public Minefield(int width, int height) {
         this.width = width;
         this.height = height;
         this.size = width * height;
