@@ -114,6 +114,34 @@ public class Field {
     }
 
     /**
+     * Установить или снять отметку с клетки.
+     */
+    public void markCell(Cell cell) {
+        cell.switchState();
+    }
+
+    /**
+     * Открыть клетку. Если клетка пустая, открыть соседние клетки.
+     */
+    public void openCell(Cell cell) {
+        if (!cell.canOpened())
+            return;
+
+        cell.open();
+
+        if (cell.isClear())
+            nearbyPositions(cell).forEach(this::openCell);
+    }
+
+    public void openCell(int position) {
+        Cell cell = get(position);
+        if (null == cell)
+            return;
+
+        openCell(cell);
+    }
+
+    /**
      * Вывести данные поля в консоль.
      */
     public void printCells() {
@@ -131,7 +159,25 @@ public class Field {
      * Преобразовать координаты в позицию клетки.
      */
     public int position(int x, int y) {
-        return width * y + x;
+        return inField(x, y) ? width * y + x : -1;
+    }
+
+    /**
+     * Получить список позиций соседних клеток.
+     */
+    public List<Integer> nearbyPositions(Cell cell) {
+        List<Integer> positions = new ArrayList<>();
+        for (int y = -1; y < 2; y++) {
+            for (int x = -1; x < 2; x++) {
+                if (x == 0 && y == 0)
+                    continue;
+                int position = position(cell.getX() + x, cell.getY() + y);
+                if (inField(position))
+                    positions.add(position);
+            }
+        }
+
+        return positions;
     }
 
     /**

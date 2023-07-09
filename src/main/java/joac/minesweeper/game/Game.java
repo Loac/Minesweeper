@@ -4,6 +4,8 @@ public class Game {
 
     private final Field field;
 
+    public State state = State.NEW;
+
     public Game(GameProperties properties) {
         field = new Field(properties.getFieldWith(), properties.getFieldHeight());
 
@@ -17,12 +19,36 @@ public class Game {
     }
 
     public void markCell(Cell cell) {
-        cell.switchState();
+        field.markCell(cell);
+        inProgress();
     }
 
     public void openCell(Cell cell) {
-        if (cell.canOpened()) {
-            cell.open();
+        if (!cell.canOpened())
+            return;
+
+        field.openCell(cell);
+
+        if (cell.isMine()) {
+            gameOver();
+            return;
         }
+
+        inProgress();
+    }
+
+    public void inProgress() {
+        state = State.IN_PROGRESS;
+    }
+
+    public void gameOver() {
+        state = State.LOSE;
+    }
+
+    public enum State {
+        NEW,
+        IN_PROGRESS,
+        LOSE,
+        WIN
     }
 }

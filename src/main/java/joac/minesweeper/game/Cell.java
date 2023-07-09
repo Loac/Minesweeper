@@ -42,6 +42,10 @@ public class Cell {
         return danger == MINE;
     }
 
+    public boolean isClear() {
+        return danger == CLEAR;
+    }
+
     public int getX() {
         return x;
     }
