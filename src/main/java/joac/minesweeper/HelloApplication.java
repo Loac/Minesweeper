@@ -27,7 +27,7 @@ public class HelloApplication extends Application {
         game.getField().printCells();
 
         minefield = new Minefield(game.getField());
-        minefield.build(this::actionMinefield);
+        minefield.setHandler(this::actionMinefield);
 
         Scene scene = new Scene(minefield, minefield.width(), minefield.height());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();

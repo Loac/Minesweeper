@@ -20,14 +20,15 @@ public class Minefield extends VBox {
     public Minefield(Field field) {
         this.field = field;
         setPadding(new Insets(20, 20, 20, 20));
+
+        build();
     }
 
-    public void build(EventHandler<? super MouseEvent> eventHandler) {
+    private void build() {
         Rows rows = new Rows();
         Row row = new Row();
         for (Cell cell : field.getCells()) {
             Square square = new Square(cell);
-            square.getPin().setOnMouseClicked(eventHandler);
             row.getChildren().add(square);
             squares.add(square);
 
@@ -39,6 +40,10 @@ public class Minefield extends VBox {
 
         getChildren().add(rows);
         autosize();
+    }
+
+    public void setHandler(EventHandler<? super MouseEvent> eventHandler) {
+        squares.forEach(square -> square.getPin().setOnMouseClicked(eventHandler));
     }
 
     public double width() {
