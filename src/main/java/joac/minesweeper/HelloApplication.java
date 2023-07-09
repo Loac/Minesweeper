@@ -37,7 +37,6 @@ public class HelloApplication extends Application {
         VBox minefield = new VBox();
         minefield.setPadding(new Insets(20, 20, 20, 20));
         VBox rows = new VBox();
-        rows.setBorder(new Border(new BorderStroke(Color.rgb(220,220,220), BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         rows.setSpacing(2);
         HBox row = new HBox();
         row.setSpacing(2);
@@ -73,7 +72,6 @@ public class HelloApplication extends Application {
         VBox buttons = new VBox();
         buttons.setPadding(new Insets(20, 20, 20, 20));
         VBox rows = new VBox();
-        rows.setBorder(new Border(new BorderStroke(Color.rgb(220,220,220), BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         rows.setSpacing(2);
         HBox row = new HBox();
         row.setSpacing(2);
