@@ -1,13 +1,10 @@
 package joac.minesweeper;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import joac.minesweeper.game.Cell;
 import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Game;
 import joac.minesweeper.gui.Minefield;
@@ -22,18 +19,18 @@ public class HelloApplication extends Application {
 
     private Game game;
 
+    private Minefield minefield;
+
     @Override
     public void start(Stage stage) throws IOException {
 
         game = engine.newGame();
         game.getField().printCells();
 
+        minefield = new Minefield(game.getField());
+        minefield.build(this::actionMinefield);
 
-        Minefield minefield = new Minefield(game.getField());
-        minefield.build(this::action);
-
-
-        Scene scene = new Scene(minefield, minefield.getBoundsInParent().getWidth(), minefield.getBoundsInParent().getHeight());
+        Scene scene = new Scene(minefield, minefield.width(), minefield.height());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.setTitle("Minesweeper!");
@@ -42,31 +39,18 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public void action(MouseEvent event) {
+    public void actionMinefield(MouseEvent event) {
+        Square.Pin pin = (Square.Pin) event.getSource();
 
-        Square.Pin button = (Square.Pin) event.getSource();
-        if (event.getButton().equals(MouseButton.PRIMARY))
-            primaryAction(button);
-        if (event.getButton().equals(MouseButton.SECONDARY))
-            secondaryAction(button);
-    }
-
-    public void primaryAction(Square.Pin button) {
-        game.openCell(button.getCell());
-        updateButton(button);
-    }
-
-    private void secondaryAction(Square.Pin button) {
-        game.markCell(button.getCell());
-        updateButton(button);
-    }
-
-    public void updateButton(Square.Pin button) {
-        switch (button.getCell().getState()) {
-            case DEFAULT -> button.setText("");
-            case MARKED -> button.setText("⚑");
-            case UNKNOWN -> button.setText("?");
-            case OPENED -> button.setVisible(false);
+        switch (event.getButton()) {
+            case PRIMARY -> {
+                game.openCell(pin.getCell());
+                minefield.update();
+            }
+            case SECONDARY -> {
+                game.markCell(pin.getCell());
+                minefield.update(pin);
+            }
         }
     }
 

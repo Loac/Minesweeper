@@ -51,6 +51,15 @@ public class Square extends Group {
             setFocusTraversable(false);
         }
 
+        public void update() {
+            switch (cell.getState()) {
+                case DEFAULT -> setText("");
+                case MARKED -> setText("⚑");
+                case UNKNOWN -> setText("?");
+                case OPENED -> setVisible(false);
+            }
+        }
+
         public Cell getCell() {
             return cell;
         }
