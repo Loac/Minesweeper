@@ -34,6 +34,10 @@ public class Cell {
         return danger;
     }
 
+    public String getDangerText() {
+        return String.valueOf(danger);
+    }
+
     public void setDanger(int danger) {
         this.danger = danger;
     }

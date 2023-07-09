@@ -152,4 +152,20 @@ public class Field {
     public boolean outField(int position) {
         return position < 0 || position > size -1;
     }
+
+    public List<Cell> getCells() {
+        return cells;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getSize() {
+        return size;
+    }
 }
