@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import joac.minesweeper.game.Cell;
 import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Game;
+import joac.minesweeper.gui.Minefield;
 import joac.minesweeper.gui.Square;
 
 import java.io.IOException;
@@ -28,27 +29,9 @@ public class HelloApplication extends Application {
         game.getField().printCells();
 
 
+        Minefield minefield = new Minefield(game.getField());
+        minefield.build(this::action);
 
-        VBox minefield = new VBox();
-        minefield.setPadding(new Insets(20, 20, 20, 20));
-        VBox rows = new VBox();
-        rows.setSpacing(2);
-        HBox row = new HBox();
-
-        row.setSpacing(2);
-        for (Cell cell : game.getField().getCells()) {
-            Square square = new Square(cell);
-            square.getPin().setOnMouseClicked(this::action);
-            row.getChildren().add(square);
-
-            if (row.getChildren().size() >= game.getField().getWidth()) {
-                rows.getChildren().add(row);
-                row = new HBox();
-                row.setSpacing(2);
-            }
-        }
-        minefield.getChildren().add(rows);
-        minefield.autosize();
 
         Scene scene = new Scene(minefield, minefield.getBoundsInParent().getWidth(), minefield.getBoundsInParent().getHeight());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
@@ -60,7 +43,8 @@ public class HelloApplication extends Application {
     }
 
     public void action(MouseEvent event) {
-        Square.Pin button = (Square.Pin) event.getTarget();
+
+        Square.Pin button = (Square.Pin) event.getSource();
         if (event.getButton().equals(MouseButton.PRIMARY))
             primaryAction(button);
         if (event.getButton().equals(MouseButton.SECONDARY))
