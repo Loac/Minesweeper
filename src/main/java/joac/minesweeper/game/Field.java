@@ -101,16 +101,8 @@ public class Field {
      * Цикл обойдет все клетки вокруг указанной. Если соседняя клетка
      * не является миной, то уровень ее опасности увеличится на 1.
      */
-    private void calcCell(Cell mine) {
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                Cell cell = nearby(mine, x, y);
-                if (cell == null)
-                    continue;
-
-                cell.incDanger();
-            }
-        }
+    private void calcCell(Cell cell) {
+        nearbyPositions(cell).forEach(position -> get(position).incDanger());
     }
 
     /**

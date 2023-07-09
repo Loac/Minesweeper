@@ -2,7 +2,6 @@ package joac.minesweeper;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import joac.minesweeper.game.Engine;

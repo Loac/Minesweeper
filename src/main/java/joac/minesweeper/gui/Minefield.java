@@ -19,11 +19,12 @@ public class Minefield extends VBox {
 
     public Minefield(Field field) {
         this.field = field;
+        setPadding(new Insets(20, 20, 20, 20));
     }
 
     public void build(EventHandler<? super MouseEvent> eventHandler) {
-        VBox rows = new VBox();
-        HBox row = new HBox();
+        Rows rows = new Rows();
+        Row row = new Row();
         for (Cell cell : field.getCells()) {
             Square square = new Square(cell);
             square.getPin().setOnMouseClicked(eventHandler);
@@ -32,14 +33,11 @@ public class Minefield extends VBox {
 
             if (row.getChildren().size() >= field.getWidth()) {
                 rows.getChildren().add(row);
-                row = new HBox();
+                row = new Row();
             }
         }
-        rows.setSpacing(2);
-        rows.getChildren().forEach(node -> ((HBox) node).setSpacing(2));
 
         getChildren().add(rows);
-        setPadding(new Insets(20, 20, 20, 20));
         autosize();
     }
 
@@ -63,4 +61,19 @@ public class Minefield extends VBox {
         pin.update();
     }
 
+    public static class Rows extends VBox {
+
+        public Rows() {
+            setSpacing(2);
+        }
+    }
+
+    public static class Row extends HBox {
+
+        public Row() {
+            setSpacing(2);
+            setMaxHeight(40);
+            setMinHeight(40);
+        }
+    }
 }
