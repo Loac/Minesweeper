@@ -49,10 +49,12 @@ public class Game {
 
     public void switchMarker(Cell cell) {
         minefield.switchMarker(cell);
-        progress();
     }
 
     public void openCell(Cell cell) {
+        if (isNew())
+            gameStart();
+
         if (!cell.canOpened())
             return;
 
@@ -60,15 +62,9 @@ public class Game {
 
         if (cell.isMine()) {
             gameLose();
-            return;
-        }
-
-        if (checkWinCondition()) {
+        } else if (checkWinCondition()) {
             gameWin();
-            return;
         }
-
-        progress();
     }
 
     /**
@@ -83,30 +79,24 @@ public class Game {
         return true;
     }
 
-    /**
-     * Игра начинается, когда пользователь совершит какое-либо действие.
-     * В этот момент запускается таймер.
-     */
-    public void progress() {
-        if (isNew())
-            gameStart();
-    }
-
     public void gameStart() {
         state = State.IN_PROGRESS;
         startedAt = System.currentTimeMillis();
+        System.out.println(getStateText());
     }
 
     public void gameWin() {
         minefield.markMines();
         state = State.WIN;
         finishedAt = System.currentTimeMillis();
+        System.out.println(getStateText());
     }
 
     public void gameLose() {
         minefield.openCells();
         state = State.LOSE;
         finishedAt = System.currentTimeMillis();
+        System.out.println(getStateText());
     }
 
     public boolean isNew() {
