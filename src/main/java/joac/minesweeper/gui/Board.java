@@ -48,14 +48,6 @@ public class Board extends VBox {
         squares.forEach(square -> square.getPin().setOnMouseClicked(eventHandler));
     }
 
-    public double width() {
-        return getBoundsInParent().getWidth();
-    }
-
-    public double height() {
-        return getBoundsInParent().getHeight();
-    }
-
     /**
      * Обновить состояние игрового поля.
      * Кнопки обновляются целиком каждый раз, так как открытие одной клетки может повлечь за собой изменение
@@ -77,10 +69,6 @@ public class Board extends VBox {
 
     public void update(Square.Value value) {
         value.update();
-    }
-
-    public boolean isValuesUpdated() {
-        return isValuesUpdated;
     }
 
     public static class Rows extends VBox {

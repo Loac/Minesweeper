@@ -28,10 +28,6 @@ public class Cell {
         return danger;
     }
 
-    public String getDangerText() {
-        return String.valueOf(danger);
-    }
-
     public void setDanger(int danger) {
         this.danger = danger;
     }
@@ -63,10 +59,6 @@ public class Cell {
 
     public Marker getState() {
         return marker;
-    }
-
-    public void setState(Marker marker) {
-        this.marker = marker;
     }
 
     public void switchMarker() {

@@ -77,14 +77,6 @@ public class Minefield {
     }
 
     /**
-     * Получить клетку соседнюю клетку по координатам.
-     * Значение (0,0) вернет слева верхнюю клетку.
-     */
-    public Cell nearby(Cell mine, int x, int y) {
-        return get(mine.getX() + x - 1, mine.getY() + y - 1);
-    }
-
-    /**
      * Заполнить массив клеток объектами Cell.
      */
     public void fillCells() {
@@ -123,14 +115,17 @@ public class Minefield {
     /**
      * Открыть клетку. Если клетка пустая, открыть соседние клетки.
      */
-    public void openCell(Cell cell) {
-        if (!cell.canOpened())
-            return;
+    public boolean openCell(Cell cell) {
+        if (cell.canOpened()) {
+            cell.open();
 
-        cell.open();
+            if (cell.isClear())
+                nearbyPositions(cell).forEach(this::openCell);
 
-        if (cell.isClear())
-            nearbyPositions(cell).forEach(this::openCell);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void openCell(int position) {

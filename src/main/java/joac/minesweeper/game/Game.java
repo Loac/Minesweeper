@@ -55,15 +55,12 @@ public class Game {
         if (isNew())
             gameStart(cell);
 
-        if (!cell.canOpened())
-            return;
-
-        minefield.openCell(cell);
-
-        if (cell.isMine()) {
-            gameLose();
-        } else if (checkWinCondition()) {
-            gameWin();
+        if (minefield.openCell(cell)) {
+            if (cell.isMine()) {
+                gameLose();
+            } else if (checkWinCondition()) {
+                gameWin();
+            }
         }
     }
 
