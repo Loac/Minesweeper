@@ -30,20 +30,41 @@ public class AppMenu extends MenuBar {
 
     public static class MainMenu extends Menu {
 
-        private final MenuItem newGame = new MenuItem();
+        private final MenuItem newEasyGame = new MenuItem();
+
+        private final MenuItem newMediumGame = new MenuItem();
+
+        private final MenuItem newHardGame = new MenuItem();
+
         private final MenuItem closeApp = new MenuItem();
 
         public MainMenu() {
+            Menu newGame = new Menu();
             newGame.setText("New game");
+            newEasyGame.setText("Easy");
+            newMediumGame.setText("Medium");
+            newHardGame.setText("Hard");
             closeApp.setText("Close");
+
+            newGame.getItems().add(newEasyGame);
+            newGame.getItems().add(newMediumGame);
+            newGame.getItems().add(newHardGame);
 
             getItems().add(newGame);
             getItems().add(new SeparatorMenuItem());
             getItems().add(closeApp);
         }
 
-        public final void setOnNewGameAction(EventHandler<ActionEvent> eventHandler) {
-            newGame.setOnAction(eventHandler);
+        public final void setOnNewEasyGameAction(EventHandler<ActionEvent> eventHandler) {
+            newEasyGame.setOnAction(eventHandler);
+        }
+
+        public final void setOnNewMediumGameAction(EventHandler<ActionEvent> eventHandler) {
+            newMediumGame.setOnAction(eventHandler);
+        }
+
+        public final void setOnNewHardGameAction(EventHandler<ActionEvent> eventHandler) {
+            newHardGame.setOnAction(eventHandler);
         }
 
         public final void setOnCloseAction(EventHandler<ActionEvent> eventHandler) {

@@ -34,17 +34,25 @@ public class GameProperties {
 
     public static GameProperties easy() {
         GameProperties properties = new GameProperties();
-        properties.setFieldWith(7);
-        properties.setFieldHeight(5);
-        properties.setMineCount(4);
+        properties.setFieldWith(8);
+        properties.setFieldHeight(6);
+        properties.setMineCount(8);
         return properties;
     }
 
     public static GameProperties medium() {
         GameProperties properties = new GameProperties();
-        properties.setFieldWith(9);
-        properties.setFieldHeight(7);
-        properties.setMineCount(6);
+        properties.setFieldWith(12);
+        properties.setFieldHeight(8);
+        properties.setMineCount(14);
+        return properties;
+    }
+
+    public static GameProperties hard() {
+        GameProperties properties = new GameProperties();
+        properties.setFieldWith(16);
+        properties.setFieldHeight(12);
+        properties.setMineCount(20);
         return properties;
     }
 }

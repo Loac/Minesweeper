@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Game;
+import joac.minesweeper.game.GameProperties;
 import joac.minesweeper.gui.*;
 
 import java.util.Objects;
@@ -56,7 +57,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
         this.stage = stage;
 
-        actionNewGame();
+        actionNewGame(GameProperties.easy());
 
         stage.setTitle("Minesweeper!");
         stage.setResizable(false);
@@ -64,8 +65,8 @@ public class HelloApplication extends Application {
         stage.setOnCloseRequest(event -> scheduler.shutdown());
     }
 
-    public Scene buildGame() {
-        game = engine.newGame();
+    public Scene buildGame(GameProperties properties) {
+        game = engine.newGame(properties);
 
         board = new Board(game.getField());
         board.setHandler(this::actionMinefield);
@@ -83,7 +84,9 @@ public class HelloApplication extends Application {
 
     public BorderPane buildApplicationMenu() {
         AppMenu appMenu = new AppMenu();
-        appMenu.getMainMenu().setOnNewGameAction(event -> actionNewGame());
+        appMenu.getMainMenu().setOnNewEasyGameAction(event -> actionNewGame(GameProperties.easy()));
+        appMenu.getMainMenu().setOnNewMediumGameAction(event -> actionNewGame(GameProperties.medium()));
+        appMenu.getMainMenu().setOnNewHardGameAction(event -> actionNewGame(GameProperties.hard()));
         appMenu.getMainMenu().setOnCloseAction(event -> actionExit());
 
         BorderPane borderPane = new BorderPane();
@@ -92,8 +95,8 @@ public class HelloApplication extends Application {
         return borderPane;
     }
 
-    public void actionNewGame() {
-        stage.setScene(buildGame());
+    public void actionNewGame(GameProperties properties) {
+        stage.setScene(buildGame(properties));
     }
 
     public void actionExit() {
