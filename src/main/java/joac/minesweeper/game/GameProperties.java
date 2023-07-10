@@ -52,7 +52,7 @@ public class GameProperties {
         GameProperties properties = new GameProperties();
         properties.setFieldWith(16);
         properties.setFieldHeight(12);
-        properties.setMineCount(20);
+        properties.setMineCount(24);
         return properties;
     }
 }

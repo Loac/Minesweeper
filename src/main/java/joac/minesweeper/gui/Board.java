@@ -17,6 +17,8 @@ public class Board extends VBox {
 
     private final List<Square> squares = new ArrayList<>();
 
+    private boolean isValuesUpdated = false;
+
     public Board(Minefield minefield) {
         this.minefield = minefield;
         setPadding(new Insets(20, 20, 20, 20));
@@ -54,16 +56,31 @@ public class Board extends VBox {
         return getBoundsInParent().getHeight();
     }
 
+    /**
+     * Обновить состояние игрового поля.
+     * Кнопки обновляются целиком каждый раз, так как открытие одной клетки может повлечь за собой изменение
+     * видимости других кнопок. Состояние значений обновляются только один раз, после начала игры, когда
+     * открыта первая клетка и сгенерировано минное поле.
+     */
     public void update() {
-        squares.forEach(this::update);
-    }
+        squares.forEach(square -> update(square.getPin()));
 
-    public void update(Square square) {
-        square.getPin().update();
+        if (!isValuesUpdated) {
+            isValuesUpdated = true;
+            squares.forEach(square -> update(square.getValue()));
+        }
     }
 
     public void update(Square.Pin pin) {
         pin.update();
+    }
+
+    public void update(Square.Value value) {
+        value.update();
+    }
+
+    public boolean isValuesUpdated() {
+        return isValuesUpdated;
     }
 
     public static class Rows extends VBox {

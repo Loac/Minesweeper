@@ -20,14 +20,22 @@ public class Minefield {
     }
 
     /**
-     * Установить заданное количество мин, но не больше чем количество клеток поля.
+     * Установить заданное количество мин, но не больше чем количество клеток поля -1.
+     * Во внимание принимается одна клетка, с которой начинается игра.
+     * Она никогда не должна быть заминирована.
      */
-    public void plantMines(int count) {
-        if (count > size)
-            count = size;
+    public void plantMines(int count, Cell startCell) {
+        plantMines(count, position(startCell.getX(), startCell.getY()));
+    }
+
+    public void plantMines(int count, int exclude) {
+        if (count > size -1)
+            count = size -1;
         int planted = 0;
         while (planted < count) {
             int position = (int) (size * Math.random());
+            if (position == exclude)
+                continue;
             if (plant(position))
                 planted++;
         }

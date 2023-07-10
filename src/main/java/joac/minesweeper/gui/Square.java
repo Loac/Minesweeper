@@ -69,7 +69,11 @@ public class Square extends Group {
 
     public static class Value extends Label {
 
+        private final Cell cell;
+
         public Value(Cell cell) {
+            this.cell = cell;
+
             setMaxWidth(40);
             setMaxHeight(40);
             setMinWidth(40);
@@ -77,7 +81,9 @@ public class Square extends Group {
             setAlignment(Pos.CENTER);
             setFont(Font.font("Monaco", 16));
             setBorder(new Border(new BorderStroke(Color.rgb(220,220,220), BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        }
 
+        public void update() {
             switch (cell.getDanger()) {
                 case 1, 2, 3, 4, 5, 6, 7, 8 -> setText(String.valueOf(cell.getDanger()));
                 case 9 -> setText("✖");

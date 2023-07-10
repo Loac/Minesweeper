@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Game {
 
+    private final GameProperties properties;
+
     private final Minefield minefield;
 
     public State state = State.NEW;
@@ -14,14 +16,9 @@ public class Game {
     public long finishedAt;
 
     public Game(GameProperties properties) {
+        this.properties = properties;
         minefield = new Minefield(properties.getFieldWith(), properties.getFieldHeight());
-
         minefield.fillCells();
-        minefield.plantMines(properties.getMineCount());
-        minefield.calcCells();
-
-        System.out.println("New game");
-        minefield.printCells();
     }
 
     public String getTimeText() {
@@ -56,7 +53,7 @@ public class Game {
 
     public void openCell(Cell cell) {
         if (isNew())
-            gameStart();
+            gameStart(cell);
 
         if (!cell.canOpened())
             return;
@@ -82,9 +79,15 @@ public class Game {
         return true;
     }
 
-    public void gameStart() {
+    public void gameStart(Cell startCell) {
+        minefield.plantMines(properties.getMineCount(), startCell);
+        minefield.calcCells();
+
         state = State.IN_PROGRESS;
         startedAt = System.currentTimeMillis();
+
+        System.out.println("Start game");
+        minefield.printCells();
         System.out.println(getStateText());
     }
 
