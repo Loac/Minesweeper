@@ -19,6 +19,8 @@ public class HelloApplication extends Application {
 
     private final Engine engine = new Engine();
 
+    private Stage stage;
+
     private Game game;
 
     private Board board;
@@ -31,6 +33,10 @@ public class HelloApplication extends Application {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    /**
+     * Основные элементы интерфейса вынесены в свойства класса.
+     * Цикл, периодически проверяет состояние игры и выводит данные в интерфейс.
+     */
     public HelloApplication() {
         grid.setState(state);
         grid.setTimer(timer);
@@ -48,8 +54,18 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
+
+        actionNewGame();
+
+        stage.setTitle("Minesweeper!");
+        stage.setResizable(false);
+        stage.show();
+        stage.setOnCloseRequest(event -> scheduler.shutdown());
+    }
+
+    public Scene buildGame() {
         game = engine.newGame();
-        game.getField().printCells();
 
         board = new Board(game.getField());
         board.setHandler(this::actionMinefield);
@@ -62,18 +78,13 @@ public class HelloApplication extends Application {
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
         scene.getStylesheets().add(css);
 
-        stage.setTitle("Minesweeper!");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
-
-        stage.setOnCloseRequest(event -> scheduler.shutdown());
+        return scene;
     }
 
     public BorderPane buildApplicationMenu() {
         AppMenu appMenu = new AppMenu();
+        appMenu.getMainMenu().setOnNewGameAction(event -> actionNewGame());
         appMenu.getMainMenu().setOnCloseAction(event -> actionExit());
-        appMenu.getMainMenu().setOnNewGameAction(event -> actionExit());
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(appMenu);
@@ -82,7 +93,7 @@ public class HelloApplication extends Application {
     }
 
     public void actionNewGame() {
-
+        stage.setScene(buildGame());
     }
 
     public void actionExit() {

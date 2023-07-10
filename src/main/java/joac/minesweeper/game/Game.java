@@ -19,6 +19,9 @@ public class Game {
         minefield.fillCells();
         minefield.plantMines(properties.getMineCount());
         minefield.calcCells();
+
+        System.out.println("New game");
+        minefield.printCells();
     }
 
     public String getTimeText() {
