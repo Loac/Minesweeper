@@ -1,15 +1,18 @@
 package joac.minesweeper;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import joac.minesweeper.game.Engine;
 import joac.minesweeper.game.Game;
 import joac.minesweeper.gui.AppMenu;
@@ -17,6 +20,11 @@ import joac.minesweeper.gui.Board;
 import joac.minesweeper.gui.Square;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class HelloApplication extends Application {
 
@@ -25,6 +33,12 @@ public class HelloApplication extends Application {
     private Game game;
 
     private Board board;
+
+    private Label timer;
+
+    private Label state;
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Override
     public void start(Stage stage) {
@@ -35,30 +49,55 @@ public class HelloApplication extends Application {
         board = new Board(game.getField());
         board.setHandler(this::actionMinefield);
 
-        HBox pane = new HBox();
-        Label label = new Label();
-        label.setText("01:00");
-        label.setMaxHeight(30);
-        label.setMinHeight(30);
-        Button button = new Button();
-        button.setText("New game");
-        button.setMaxHeight(30);
-        button.setMinHeight(30);
-        pane.getChildren().add(label);
-        pane.setPadding(new Insets(20, 20, 0, 20));
-        pane.autosize();
+        timer = new Label();
+        timer.setText(game.getTimeText());
+        timer.setMaxHeight(30);
+        timer.setMinHeight(30);
+        timer.setAlignment(Pos.BASELINE_RIGHT);
+        timer.setMaxWidth(400);
+
+        state = new Label();
+        state.setAlignment(Pos.BASELINE_CENTER);
+        state.setMaxWidth(400);
+
+        scheduler.scheduleWithFixedDelay(() ->
+                Platform.runLater(() -> {
+                    timer.setText(game.getTimeText());
+                    state.setText(game.getStateText());
+                }),
+                0, 500, TimeUnit.MILLISECONDS);
+
+
+
+        GridPane grid = new GridPane();
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(30);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(40);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(30);
+        grid.getColumnConstraints().addAll(col1,col2,col3);
+
+
+        grid.add(state, 1, 0);
+        grid.add(timer, 2, 0);
+        grid.setPadding(new Insets(20, 20, 0, 20));
+
 
         VBox root = new VBox();
-        root.getChildren().addAll(buildApplicationMenu(), pane, board);
+        root.getChildren().addAll(buildApplicationMenu(), grid, board);
         root.autosize();
 
         Scene scene = new Scene(root, root.getBoundsInParent().getWidth(), root.getBoundsInParent().getHeight());
         String css = Objects.requireNonNull(this.getClass().getResource("application.css")).toExternalForm();
         scene.getStylesheets().add(css);
+
         stage.setTitle("Minesweeper!");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
+        stage.setOnCloseRequest(event -> scheduler.shutdown());
     }
 
     public BorderPane buildApplicationMenu() {

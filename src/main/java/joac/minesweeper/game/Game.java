@@ -1,6 +1,7 @@
 package joac.minesweeper.game;
 
-import java.util.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Game {
 
@@ -8,7 +9,9 @@ public class Game {
 
     public State state = State.NEW;
 
-    public Date startedAt;
+    public long startedAt;
+
+    public long finishedAt;
 
     public Game(GameProperties properties) {
         minefield = new Minefield(properties.getFieldWith(), properties.getFieldHeight());
@@ -16,6 +19,28 @@ public class Game {
         minefield.fillCells();
         minefield.plantMines(properties.getMineCount());
         minefield.calcCells();
+    }
+
+    public String getTimeText() {
+        long millis = 0;
+        switch (state) {
+            case IN_PROGRESS -> millis = System.currentTimeMillis() - startedAt;
+            case WIN, LOSE -> millis = finishedAt - startedAt;
+        }
+
+        LocalTime timer = LocalTime.ofSecondOfDay(millis / 1000);
+        return timer.format(DateTimeFormatter.ofPattern("mm:ss"));
+    }
+
+    public String getStateText() {
+        String text = "";
+        switch (state) {
+            case NEW -> text = "Ready!";
+            case IN_PROGRESS -> text = "In progress";
+            case LOSE -> text = "You lose";
+            case WIN -> text = "You win";
+        }
+        return text;
     }
 
     public Minefield getField() {
@@ -63,28 +88,37 @@ public class Game {
      * В этот момент запускается таймер.
      */
     public void progress() {
-        if (isNew()) {
+        if (isNew())
             gameStart();
-            state = State.IN_PROGRESS;
-        }
     }
 
     public void gameStart() {
-        startedAt = new Date();
+        state = State.IN_PROGRESS;
+        startedAt = System.currentTimeMillis();
     }
 
     public void gameWin() {
         minefield.markMines();
         state = State.WIN;
+        finishedAt = System.currentTimeMillis();
     }
 
     public void gameLose() {
         minefield.openCells();
         state = State.LOSE;
+        finishedAt = System.currentTimeMillis();
     }
 
     public boolean isNew() {
         return state.equals(State.NEW);
+    }
+
+    public boolean inProgress() {
+        return state.equals(State.IN_PROGRESS);
+    }
+
+    public boolean isOver() {
+        return state.equals(State.LOSE) || state.equals(State.WIN);
     }
 
     public enum State {
